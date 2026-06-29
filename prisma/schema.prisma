@@ -1,0 +1,137 @@
+// Workspace AI — data model
+// Vector search is powered by pgvector. Prisma has no first-class vector type,
+// so the embedding column uses `Unsupported("vector(1536)")` and all similarity
+// queries run through raw SQL (see server/src/services/embedding.service.ts).
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [vector]
+}
+
+model Workspace {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+  pages Page[]
+  chats Chat[]
+}
+
+model User {
+  id          String   @id @default(cuid())
+  // `externalId` is the id handed to us by the auth provider (Clerk / Auth.js).
+  // Auth itself lives at the edge; the API just trusts a verified user id.
+  externalId  String   @unique
+  email       String   @unique
+  name        String?
+  createdAt   DateTime @default(now())
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+
+  pages Page[]
+  chats Chat[]
+  tasks Task[]
+
+  @@index([workspaceId])
+}
+
+model Page {
+  id          String   @id @default(cuid())
+  title       String   @default("Untitled")
+  // Editor content stored as portable markdown. The rich-text editor
+  // serializes to/from this on the client.
+  content     String   @default("")
+  icon        String?
+  archived    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  chunks Embedding[]
+  tasks  Task[]
+
+  @@index([workspaceId])
+  @@index([authorId])
+}
+
+// One row per text chunk. A page is split into chunks, each embedded separately,
+// so retrieval can return the most relevant *section* of a long document.
+model Embedding {
+  id         String   @id @default(cuid())
+  pageId     String
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  chunkIndex Int
+  content    String
+  // The actual vector. Dimension must match EMBEDDING_DIM / your provider.
+  embedding  Unsupported("vector(1536)")
+  createdAt  DateTime @default(now())
+
+  @@index([pageId])
+}
+
+model Chat {
+  id          String   @id @default(cuid())
+  workspaceId String
+  workspace   Workspace @relation(fields: [workspaceId], references: [id], onDelete: Cascade)
+  userId      String
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+
+  messages ChatMessage[]
+
+  @@index([workspaceId])
+  @@index([userId])
+}
+
+model ChatMessage {
+  id        String   @id @default(cuid())
+  chatId    String
+  chat      Chat     @relation(fields: [chatId], references: [id], onDelete: Cascade)
+  role      Role
+  content   String
+  // Which page chunks were used as context, for citations / "sources" UI.
+  citations Json?
+  createdAt DateTime @default(now())
+
+  @@index([chatId])
+}
+
+model Task {
+  id          String     @id @default(cuid())
+  text        String
+  status      TaskStatus @default(OPEN)
+  dueDate     DateTime?
+  // Where this task was auto-extracted from (nullable for manual tasks).
+  sourcePageId String?
+  sourcePage   Page?     @relation(fields: [sourcePageId], references: [id], onDelete: SetNull)
+  userId      String
+  user        User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt   DateTime   @default(now())
+
+  @@index([userId])
+  @@index([sourcePageId])
+}
+
+enum Role {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+enum TaskStatus {
+  OPEN
+  DONE
+}

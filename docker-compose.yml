@@ -1,0 +1,22 @@
+services:
+  db:
+    # pgvector/pgvector ships Postgres 16 with the vector extension preinstalled
+    image: pgvector/pgvector:pg16
+    container_name: workspace-ai-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: workspace
+      POSTGRES_PASSWORD: workspace
+      POSTGRES_DB: workspace_ai
+    ports:
+      - "5432:5432"
+    volumes:
+      - workspace_ai_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workspace -d workspace_ai"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  workspace_ai_pgdata:
