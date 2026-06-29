@@ -34,7 +34,9 @@ async function main() {
     });
     console.log(res.ok ? `✓ ${d.title}` : `✗ ${d.title}: ${await res.text()}`);
   }
-  console.log("\nDone. Try: GET /search?q=GPU%20optimization  or ask the AI 'What have I learned about FPGA?'");
+  console.log(
+    "\nDone. Try: GET /search?q=GPU%20optimization  or ask the AI 'What have I learned about FPGA?'",
+  );
 }
 
 main();

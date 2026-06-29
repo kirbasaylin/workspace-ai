@@ -28,7 +28,8 @@ export function chunkText(
       const slice = clean.slice(start, end);
       const para = slice.lastIndexOf("\n\n");
       const sentence = slice.lastIndexOf(". ");
-      const breakAt = para > chunkSize * 0.5 ? para : sentence > chunkSize * 0.5 ? sentence + 1 : -1;
+      const breakAt =
+        para > chunkSize * 0.5 ? para : sentence > chunkSize * 0.5 ? sentence + 1 : -1;
       if (breakAt > 0) end = start + breakAt;
     }
 

@@ -9,7 +9,8 @@ export const summarizeRouter = Router();
 summarizeRouter.post(
   "/",
   asyncRoute(async (req, res) => {
-    let { content, pageId } = req.body ?? {};
+    let content = req.body?.content;
+    const pageId = req.body?.pageId;
     if (!content && pageId) {
       const page = await prisma.page.findFirst({
         where: { id: pageId, workspaceId: req.workspaceId },

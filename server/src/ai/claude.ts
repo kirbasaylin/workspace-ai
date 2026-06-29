@@ -6,7 +6,10 @@ export const claudeChat: ChatProvider = {
   name: "claude",
   async chat(messages: ChatMessage[], opts = {}) {
     if (!env.ANTHROPIC_API_KEY) throw new Error("ANTHROPIC_API_KEY is not set");
-    const system = messages.filter((m) => m.role === "system").map((m) => m.content).join("\n\n");
+    const system = messages
+      .filter((m) => m.role === "system")
+      .map((m) => m.content)
+      .join("\n\n");
     const turns = messages
       .filter((m) => m.role !== "system")
       .map((m) => ({ role: m.role, content: m.content }));

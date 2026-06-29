@@ -96,22 +96,22 @@ erDiagram
     }
 ```
 
-A page is split into overlapping **chunks**; each chunk gets its own embedding row, so retrieval can return the most relevant *section* of a long document rather than the whole thing.
+A page is split into overlapping **chunks**; each chunk gets its own embedding row, so retrieval can return the most relevant _section_ of a long document rather than the whole thing.
 
 ---
 
 ## Tech stack
 
-| Layer | Choice |
-|---|---|
-| Frontend | React, TypeScript, Next.js (App Router) |
-| Backend | Node.js, Express |
-| Database | PostgreSQL + **pgvector** |
-| ORM | Prisma |
-| Embeddings & LLM | OpenAI · Claude · Gemini · Ollama (swappable) |
-| Auth (boundary ready) | Clerk / Auth.js |
-| Tests | Vitest |
-| CI | GitHub Actions (lint · format · test · build) |
+| Layer                 | Choice                                        |
+| --------------------- | --------------------------------------------- |
+| Frontend              | React, TypeScript, Next.js (App Router)       |
+| Backend               | Node.js, Express                              |
+| Database              | PostgreSQL + **pgvector**                     |
+| ORM                   | Prisma                                        |
+| Embeddings & LLM      | OpenAI · Claude · Gemini · Ollama (swappable) |
+| Auth (boundary ready) | Clerk / Auth.js                               |
+| Tests                 | Vitest                                        |
+| CI                    | GitHub Actions (lint · format · test · build) |
 
 ---
 
@@ -133,21 +133,21 @@ Want privacy / zero API cost? Point both at **Ollama** and everything runs local
 
 ## API
 
-| Method | Route | Description |
-|---|---|---|
-| `POST` | `/pages` | Create a page (auto-embeds it) |
-| `GET` | `/pages` | List pages |
-| `GET` | `/pages/:id` | Get a page |
-| `PATCH` | `/pages/:id` | Update a page (re-embeds) |
-| `DELETE` | `/pages/:id` | Delete a page |
-| `GET` | `/pages/:id/related` | Related pages (vector similarity) |
-| `POST` | `/chat` | Ask a question across the workspace (RAG) |
-| `GET` | `/search?q=` | Semantic search |
-| `POST` | `/embed/:pageId` | Manually (re)index a page |
-| `POST` | `/summarize` | TLDR / key ideas / risks / next steps |
-| `POST` | `/tasks` | Extract + save tasks from text |
-| `GET` | `/tasks` | List tasks |
-| `PATCH` | `/tasks/:id` | Toggle task status |
+| Method   | Route                | Description                               |
+| -------- | -------------------- | ----------------------------------------- |
+| `POST`   | `/pages`             | Create a page (auto-embeds it)            |
+| `GET`    | `/pages`             | List pages                                |
+| `GET`    | `/pages/:id`         | Get a page                                |
+| `PATCH`  | `/pages/:id`         | Update a page (re-embeds)                 |
+| `DELETE` | `/pages/:id`         | Delete a page                             |
+| `GET`    | `/pages/:id/related` | Related pages (vector similarity)         |
+| `POST`   | `/chat`              | Ask a question across the workspace (RAG) |
+| `GET`    | `/search?q=`         | Semantic search                           |
+| `POST`   | `/embed/:pageId`     | Manually (re)index a page                 |
+| `POST`   | `/summarize`         | TLDR / key ideas / risks / next steps     |
+| `POST`   | `/tasks`             | Extract + save tasks from text            |
+| `GET`    | `/tasks`             | List tasks                                |
+| `PATCH`  | `/tasks/:id`         | Toggle task status                        |
 
 Example:
 

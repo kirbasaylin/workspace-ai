@@ -11,8 +11,14 @@ export default function Home() {
   const [content, setContent] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const refresh = () => api.listPages().then(setPages).catch(() => {});
-  useEffect(() => { refresh(); }, []);
+  const refresh = () =>
+    api
+      .listPages()
+      .then(setPages)
+      .catch(() => {});
+  useEffect(() => {
+    refresh();
+  }, []);
 
   async function openPage(id: string) {
     const p = await api.getPage(id);
@@ -44,19 +50,34 @@ export default function Home() {
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", height: "100vh" }}>
-      <aside style={{ borderRight: "1px solid var(--border)", padding: 16, background: "var(--panel)" }}>
+      <aside
+        style={{ borderRight: "1px solid var(--border)", padding: 16, background: "var(--panel)" }}
+      >
         <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 16 }}>
           <span style={{ fontSize: 18 }}>◆</span>
           <strong>Workspace AI</strong>
         </div>
-        <button style={{ width: "100%", marginBottom: 12 }} onClick={newPage}>+ New page</button>
-        <div style={{ color: "var(--muted)", fontSize: 12, textTransform: "uppercase", margin: "12px 0 6px" }}>Pages</div>
+        <button style={{ width: "100%", marginBottom: 12 }} onClick={newPage}>
+          + New page
+        </button>
+        <div
+          style={{
+            color: "var(--muted)",
+            fontSize: 12,
+            textTransform: "uppercase",
+            margin: "12px 0 6px",
+          }}
+        >
+          Pages
+        </div>
         {pages.map((p) => (
           <div
             key={p.id}
             onClick={() => openPage(p.id)}
             style={{
-              padding: "6px 8px", borderRadius: 6, cursor: "pointer",
+              padding: "6px 8px",
+              borderRadius: 6,
+              cursor: "pointer",
               background: p.id === activeId ? "var(--accent-soft)" : "transparent",
             }}
           >
@@ -70,7 +91,14 @@ export default function Home() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Untitled"
-          style={{ fontSize: 28, fontWeight: 700, border: "none", background: "transparent", padding: 0, marginBottom: 16 }}
+          style={{
+            fontSize: 28,
+            fontWeight: 700,
+            border: "none",
+            background: "transparent",
+            padding: 0,
+            marginBottom: 16,
+          }}
         />
         <textarea
           value={content}
@@ -79,7 +107,9 @@ export default function Home() {
           style={{ minHeight: 320, resize: "vertical", lineHeight: 1.7 }}
         />
         <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-          <button onClick={save} disabled={saving}>{saving ? "Saving…" : activeId ? "Save" : "Create & index"}</button>
+          <button onClick={save} disabled={saving}>
+            {saving ? "Saving…" : activeId ? "Save" : "Create & index"}
+          </button>
           {activeId && <SummarizeButton pageId={activeId} />}
         </div>
         <SearchPanel />
@@ -104,9 +134,22 @@ function SummarizeButton({ pageId }: { pageId: string }) {
   }
   return (
     <>
-      <button onClick={run} disabled={loading}>{loading ? "Summarizing…" : "✨ Summarize"}</button>
+      <button onClick={run} disabled={loading}>
+        {loading ? "Summarizing…" : "✨ Summarize"}
+      </button>
       {summary && (
-        <pre style={{ position: "fixed", inset: "auto 24px 24px auto", maxWidth: 360, background: "var(--panel-2)", border: "1px solid var(--border)", borderRadius: 10, padding: 16, whiteSpace: "pre-wrap" }}>
+        <pre
+          style={{
+            position: "fixed",
+            inset: "auto 24px 24px auto",
+            maxWidth: 360,
+            background: "var(--panel-2)",
+            border: "1px solid var(--border)",
+            borderRadius: 10,
+            padding: 16,
+            whiteSpace: "pre-wrap",
+          }}
+        >
           {summary}
         </pre>
       )}
@@ -123,13 +166,23 @@ function SearchPanel() {
   }
   return (
     <section style={{ marginTop: 32 }}>
-      <h3 style={{ color: "var(--muted)", fontSize: 13, textTransform: "uppercase" }}>Semantic search</h3>
+      <h3 style={{ color: "var(--muted)", fontSize: 13, textTransform: "uppercase" }}>
+        Semantic search
+      </h3>
       <div style={{ display: "flex", gap: 8 }}>
-        <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && run()} placeholder='e.g. "GPU optimization"' />
+        <input
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && run()}
+          placeholder='e.g. "GPU optimization"'
+        />
         <button onClick={run}>Search</button>
       </div>
       {results.map((r, i) => (
-        <div key={i} style={{ marginTop: 10, padding: 12, border: "1px solid var(--border)", borderRadius: 8 }}>
+        <div
+          key={i}
+          style={{ marginTop: 10, padding: 12, border: "1px solid var(--border)", borderRadius: 8 }}
+        >
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <strong>{r.pageTitle}</strong>
             <span style={{ color: "var(--accent)" }}>{Math.round(r.score * 100)}% match</span>
@@ -160,7 +213,17 @@ function ChatWidget() {
   return (
     <div style={{ position: "fixed", right: 24, bottom: 24 }}>
       {open && (
-        <div style={{ width: 360, background: "var(--panel)", border: "1px solid var(--border)", borderRadius: 12, padding: 16, marginBottom: 12, boxShadow: "0 12px 40px #0008" }}>
+        <div
+          style={{
+            width: 360,
+            background: "var(--panel)",
+            border: "1px solid var(--border)",
+            borderRadius: 12,
+            padding: 16,
+            marginBottom: 12,
+            boxShadow: "0 12px 40px #0008",
+          }}
+        >
           <strong>Ask your workspace</strong>
           {resp && (
             <div style={{ marginTop: 12 }}>
@@ -173,12 +236,28 @@ function ChatWidget() {
             </div>
           )}
           <div style={{ display: "flex", gap: 8, marginTop: 12 }}>
-            <input value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === "Enter" && ask()} placeholder="What projects mention CUDA?" />
-            <button onClick={ask} disabled={loading}>{loading ? "…" : "Ask"}</button>
+            <input
+              value={q}
+              onChange={(e) => setQ(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && ask()}
+              placeholder="What projects mention CUDA?"
+            />
+            <button onClick={ask} disabled={loading}>
+              {loading ? "…" : "Ask"}
+            </button>
           </div>
         </div>
       )}
-      <button onClick={() => setOpen(!open)} style={{ borderRadius: 999, padding: "12px 18px", background: "var(--accent)", borderColor: "var(--accent)", color: "white" }}>
+      <button
+        onClick={() => setOpen(!open)}
+        style={{
+          borderRadius: 999,
+          padding: "12px 18px",
+          background: "var(--accent)",
+          borderColor: "var(--accent)",
+          color: "white",
+        }}
+      >
         {open ? "Close" : "✦ AI"}
       </button>
     </div>

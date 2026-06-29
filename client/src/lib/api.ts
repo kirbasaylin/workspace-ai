@@ -1,10 +1,5 @@
 // Thin typed fetch wrapper around the Express API.
-import type {
-  ChatResponse,
-  SearchResult,
-  SummaryResponse,
-  Page,
-} from "@workspace-ai/shared";
+import type { ChatResponse, SearchResult, SummaryResponse, Page } from "@workspace-ai/shared";
 
 const BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:4000";
 

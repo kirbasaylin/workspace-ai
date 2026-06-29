@@ -44,11 +44,7 @@ export async function indexPage(pageId: string, content: string): Promise<number
  * Semantic search across a workspace. Returns the top-k most similar chunks
  * using cosine distance (`<=>`). Similarity score = 1 - distance.
  */
-export async function searchChunks(
-  workspaceId: string,
-  query: string,
-  k = 6,
-): Promise<Citation[]> {
+export async function searchChunks(workspaceId: string, query: string, k = 6): Promise<Citation[]> {
   const provider = getEmbeddingProvider();
   const [queryVec] = await provider.embed([query]);
 
@@ -78,9 +74,7 @@ export async function searchChunks(
 
 /** "Related pages" feature: most similar OTHER pages to a given page. */
 export async function relatedPages(workspaceId: string, pageId: string, k = 5) {
-  const rows = await prisma.$queryRaw<
-    { pageId: string; pageTitle: string; score: number }[]
-  >`
+  const rows = await prisma.$queryRaw<{ pageId: string; pageTitle: string; score: number }[]>`
     WITH centroid AS (
       SELECT AVG(embedding) AS v FROM "Embedding" WHERE "pageId" = ${pageId}
     )

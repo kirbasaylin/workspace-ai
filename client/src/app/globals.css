@@ -8,12 +8,24 @@
   --accent: #7c5cff;
   --accent-soft: #7c5cff22;
 }
-* { box-sizing: border-box; }
-html, body { margin: 0; padding: 0; height: 100%; }
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
 body {
   background: var(--bg);
   color: var(--text);
-  font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-family:
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    "Segoe UI",
+    sans-serif;
   font-size: 14px;
   line-height: 1.6;
 }
@@ -25,11 +37,20 @@ button {
   color: var(--text);
   border-radius: 8px;
   padding: 8px 14px;
-  transition: background 0.15s, border-color 0.15s;
+  transition:
+    background 0.15s,
+    border-color 0.15s;
 }
-button:hover { background: var(--accent-soft); border-color: var(--accent); }
-button:disabled { opacity: 0.5; cursor: default; }
-input, textarea {
+button:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+}
+button:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+input,
+textarea {
   font: inherit;
   background: var(--panel-2);
   color: var(--text);
@@ -39,4 +60,7 @@ input, textarea {
   width: 100%;
   outline: none;
 }
-input:focus, textarea:focus { border-color: var(--accent); }
+input:focus,
+textarea:focus {
+  border-color: var(--accent);
+}

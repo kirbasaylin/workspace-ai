@@ -12,7 +12,12 @@ searchRouter.get(
     if (!q) return res.status(400).json({ error: "q is required" });
     const hits = await searchChunks(req.workspaceId, q, 10);
     res.json(
-      hits.map((h) => ({ pageId: h.pageId, pageTitle: h.pageTitle, snippet: h.snippet, score: h.score })),
+      hits.map((h) => ({
+        pageId: h.pageId,
+        pageTitle: h.pageTitle,
+        snippet: h.snippet,
+        score: h.score,
+      })),
     );
   }),
 );

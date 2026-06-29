@@ -7,10 +7,16 @@ export const geminiChat: ChatProvider = {
   name: "gemini",
   async chat(messages: ChatMessage[], opts = {}) {
     if (!env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is not set");
-    const system = messages.filter((m) => m.role === "system").map((m) => m.content).join("\n\n");
+    const system = messages
+      .filter((m) => m.role === "system")
+      .map((m) => m.content)
+      .join("\n\n");
     const contents = messages
       .filter((m) => m.role !== "system")
-      .map((m) => ({ role: m.role === "assistant" ? "model" : "user", parts: [{ text: m.content }] }));
+      .map((m) => ({
+        role: m.role === "assistant" ? "model" : "user",
+        parts: [{ text: m.content }],
+      }));
 
     const res = await fetch(
       `${BASE}/models/${env.GEMINI_CHAT_MODEL}:generateContent?key=${env.GEMINI_API_KEY}`,
@@ -26,7 +32,10 @@ export const geminiChat: ChatProvider = {
     );
     if (!res.ok) throw new Error(`Gemini chat failed: ${res.status} ${await res.text()}`);
     const data = await res.json();
-    return data.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text ?? "").join("") ?? "";
+    return (
+      data.candidates?.[0]?.content?.parts?.map((p: { text?: string }) => p.text ?? "").join("") ??
+      ""
+    );
   },
 };
 
